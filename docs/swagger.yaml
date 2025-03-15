@@ -1,0 +1,354 @@
+definitions:
+  model.ActionResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Category:
+    properties:
+      category_name:
+        type: string
+      id:
+        type: string
+    type: object
+  model.Distance:
+    properties:
+      distance_km:
+        type: number
+    type: object
+  model.DistanceResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.Distance'
+    type: object
+  model.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  model.Product:
+    properties:
+      added_date:
+        type: string
+      category:
+        $ref: '#/definitions/model.Category'
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      reference:
+        type: string
+      status:
+        type: string
+      stock_city:
+        type: string
+      supplier:
+        $ref: '#/definitions/model.Supplier'
+    type: object
+  model.ProductListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+    type: object
+  model.StatPercentResponse:
+    properties:
+      data:
+        items:
+          additionalProperties:
+            type: integer
+          type: object
+        type: array
+    type: object
+  model.Supplier:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/distance:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: City name
+        in: query
+        name: city
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DistanceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+  /api/products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products with optional filters
+      parameters:
+      - description: Page number
+        in: query
+        name: page_number
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Last created at
+        in: query
+        name: last_created_at
+        type: string
+      - description: Reference
+        in: query
+        name: reference
+        type: string
+      - description: Start date
+        in: query
+        name: start_date
+        type: string
+      - description: End date
+        in: query
+        name: end_date
+        type: string
+      - description: Minimum price
+        in: query
+        name: min_price
+        type: number
+      - description: Maximum price
+        in: query
+        name: max_price
+        type: number
+      - description: Categories (comma-separated, e.g., Books,Electronics)
+        in: query
+        name: categories
+        type: string
+      - description: Suppliers (comma-separated, e.g., Supplier1,Supplier2)
+        in: query
+        name: suppliers
+        type: string
+      - description: Stock cities (comma-separated, e.g., NY,LA,Chicago)
+        in: query
+        name: stock_cities
+        type: string
+      - description: Status (comma-separated, e.g., Available,OutOfStock)
+        in: query
+        name: status
+        type: string
+      - description: Search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get all products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/model.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ActionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create product
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update an existing product
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/model.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ActionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update product
+      tags:
+      - products
+  /api/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ActionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete product
+      tags:
+      - products
+    get:
+      consumes:
+      - application/json
+      description: Get a single product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get product by ID
+      tags:
+      - products
+  /api/products/pdf:
+    get:
+      description: Generates a product report in PDF format and returns it as a downloadable
+        file
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Generate product report as PDF
+      tags:
+      - products
+  /api/statistics/products-per-category:
+    get:
+      consumes:
+      - application/json
+      description: Get the number of products per category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.StatPercentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get products per category
+      tags:
+      - statistics
+  /api/statistics/products-per-supplier:
+    get:
+      consumes:
+      - application/json
+      description: Get the number of products per supplier
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.StatPercentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get products per supplier
+      tags:
+      - statistics
+swagger: "2.0"
