@@ -2,12 +2,9 @@
 
 A Golang-based backend for managing products, suppliers, and categories with structured APIs, including PDF generation and filtering.
 
-## SWAGGER UI
-http://localhost:8080/api/swagger/index.html
-
-
+```bash
 git clone https://github.com/thinhpq0112/soa-backend.git
-
+```
 
 ### Create a .env file in the root directory of the project, replace with your own values; or you can use the .env.example file
 
@@ -19,7 +16,7 @@ DB_USERNAME=
 DB_PASSWORD=
 ```
 
-or
+or use Makefile
 ```bash
 make create-env
 ```
@@ -29,3 +26,6 @@ make create-env
 ```bash
 go run cmd/main.go
 ```
+
+### SWAGGER UI
+http://localhost:8080/api/swagger/index.html
